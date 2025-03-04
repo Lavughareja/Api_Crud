@@ -1,7 +1,6 @@
 ﻿using System.Data;
 using Microsoft.Data.SqlClient;
 using Api.Models;
-
 namespace Api.Repositories
 {
     public class CountryRepository
