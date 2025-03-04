@@ -28,7 +28,7 @@ namespace Api.Controllers
         public ActionResult Post([FromBody] Person_2 person)
         {
             _personRepository.InsertPerson(person);
-            return Ok(new { message = "Person added successfully" });
+            return Ok(new { message = "Person added successfullyy" });
         }
 
         // PUT: api/Person
