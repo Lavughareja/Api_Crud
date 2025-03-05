@@ -8,9 +8,9 @@ namespace Api.Controllers
     [ApiController]
     public class StateController : ControllerBase
     {
-        private readonly StateRepository _stateRepository;
+        private readonly IStateRepository _stateRepository;
 
-        public StateController(StateRepository stateRepository)
+        public StateController(IStateRepository stateRepository)
         {
             _stateRepository = stateRepository;
         }
@@ -48,10 +48,10 @@ namespace Api.Controllers
         #region Delete
         // DELETE: api/state/{id}
         [HttpDelete("{id}")]
-        public IActionResult DeleteState(int id)
+        public  ActionResult Delete(int id)
         {
-            _stateRepository.DeleteState(id);
-            return NoContent();
+            var result = _stateRepository.DeleteState(id);
+            return Ok(result);
         }
         #endregion
     }

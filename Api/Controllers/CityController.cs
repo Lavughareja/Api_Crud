@@ -8,9 +8,9 @@ namespace Api.Controllers
     [ApiController]
     public class CityController : ControllerBase
     {
-        private readonly CityRepository _cityRepository;
+        private readonly ICityRepository _cityRepository;
 
-        public CityController(CityRepository cityRepository)
+        public CityController(ICityRepository cityRepository)
         {
             _cityRepository = cityRepository;
         }
@@ -41,7 +41,8 @@ namespace Api.Controllers
         public IActionResult AddCity(City_2 city)
         {
             _cityRepository.AddCity(city);
-            return CreatedAtAction(nameof(GetCity), new { id = city.city_id }, city);
+            return CreatedAtAction(nameof(GetCity), new { id = city.city_id }, city); 
+            //return Ok("data insert successfully");
         }
         #endregion
 
@@ -53,7 +54,7 @@ namespace Api.Controllers
             if (id != city.city_id)
                 return BadRequest();
             _cityRepository.UpdateCity(city);
-            return NoContent();
+            return Ok("City Updated succcefully");
         }
         #endregion
 
@@ -62,8 +63,8 @@ namespace Api.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteCity(int id)
         {
-            _cityRepository.DeleteCity(id);
-            return NoContent();
+            var result = _cityRepository.DeleteCity(id);
+            return Ok(result);
         }
         #endregion
     }

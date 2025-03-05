@@ -2,24 +2,21 @@
 using Api.Models;
 using Microsoft.Data.SqlClient;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Api.Repositories
 {
-    public class PersonRepository
+    public class PersonRepository: BaseRepository, IPersonRepository
     {
-        private readonly string _connectionString;
+        public PersonRepository(IConfiguration configuration) : base(configuration) { }
 
-        public PersonRepository(IConfiguration configuration)
-        {
-            _connectionString = configuration.GetConnectionString("myConnectionString");
-        }
         #region SelectAll
         // Get All Persons with Pagination
         public List<Person> GetAllPersons(int pageNumber, int pageSize)
         {
             List<Person> persons = new List<Person>();
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (var conn = GetConnection())
             {
                 SqlCommand cmd = new SqlCommand("PR_MST_Person_SelectAll", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -58,7 +55,7 @@ namespace Api.Repositories
         // Insert Person
         public void InsertPerson(Person_2 person)
         {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (var conn = GetConnection())
             {
                 SqlCommand cmd = new SqlCommand("Person_insert", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -85,7 +82,7 @@ namespace Api.Repositories
         // Update Person
         public void UpdatePerson(Person_2 person)
         {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (var conn = GetConnection())
             {
                 SqlCommand cmd = new SqlCommand("Update_Person", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -111,18 +108,24 @@ namespace Api.Repositories
 
         #region Delete
         // Delete Person
-        public void DeletePerson(int personId)
+        public string DeletePerson(int personId)
         {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (var conn = GetConnection())
             {
-                SqlCommand cmd = new SqlCommand("Person_delete", conn);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@Person_id", personId);
+                using (SqlCommand cmd = new SqlCommand("Person_delete", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Person_id", personId);
 
-                conn.Open();
-                cmd.ExecuteNonQuery();
+                    conn.Open();
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                    return rowsAffected > 0
+                        ? "Deleted Successfully"
+                        : "Delete Failed: No record found for this ID.";
+                }
             }
         }
+
 
         #endregion
 
@@ -132,7 +135,7 @@ namespace Api.Repositories
         {
             List<Person> persons = new List<Person>();
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (var conn = GetConnection())
             {
                 SqlCommand cmd = new SqlCommand("GetPersons_Search", conn);
                 cmd.CommandType = CommandType.StoredProcedure;

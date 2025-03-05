@@ -4,21 +4,17 @@ using Api.Models;
 
 namespace Api.Repositories
 {
-    public class CityRepository
+    public class CityRepository : BaseRepository, ICityRepository
     {
-        private readonly string _connectionString;
+        public CityRepository(IConfiguration configuration) : base(configuration) { }
 
-        public CityRepository(IConfiguration configuration)
-        {
-            _connectionString = configuration.GetConnectionString("myConnectionString");
-        }
         #region SelectAll
         // Get All Cities
         public List<City> GetCities()
         {
             List<City> cities = new List<City>();
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (var conn = GetConnection())
             {
                 conn.Open();
                 using (SqlCommand cmd = new SqlCommand("PR_MST_City_SelectAll", conn))
@@ -50,12 +46,14 @@ namespace Api.Repositories
         {
             City city = null;
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (var conn = GetConnection())
             {
                 conn.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT city_id, city_name, state_id, country_id FROM City WHERE city_id = @city_id", conn))
+                using (SqlCommand cmd = new SqlCommand("GetCityByID", conn))
                 {
-                    cmd.Parameters.AddWithValue("@city_id", id);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@CityID", id);
+
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.Read())
@@ -64,8 +62,8 @@ namespace Api.Repositories
                             {
                                 city_id = reader.GetInt32(reader.GetOrdinal("city_id")),
                                 city_name = reader.GetString(reader.GetOrdinal("city_name")),
-                                state_name = reader.GetString("state_name").ToString(),
-                                country_name = reader.GetString("country_name").ToString()
+                                state_name = reader.GetString(reader.GetOrdinal("state_name")),
+                                country_name = reader.GetString(reader.GetOrdinal("country_name"))
                             };
                         }
                     }
@@ -81,7 +79,7 @@ namespace Api.Repositories
         // Insert City
         public void AddCity(City_2 city)
         {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (var conn = GetConnection())
             {
                 conn.Open();
                 using (SqlCommand cmd = new SqlCommand("City_Insert", conn))
@@ -101,7 +99,7 @@ namespace Api.Repositories
         // Update City
         public void UpdateCity(City_2 city)
         {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (var conn = GetConnection())
             {
                 conn.Open();
                 using (SqlCommand cmd = new SqlCommand("City_update", conn))
@@ -119,19 +117,23 @@ namespace Api.Repositories
 
         #region Delete
         // Delete City
-        public void DeleteCity(int id)
+        public string DeleteCity(int id)
         {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (var conn = GetConnection())
             {
                 conn.Open();
                 using (SqlCommand cmd = new SqlCommand("City_delete", conn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@city_id", id);
-                    cmd.ExecuteNonQuery();
+                    cmd.ExecuteNonQuery(); 
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                    return rowsAffected > 0
+                        ? "Deleted Successfully"
+                        : "Delete Failed: No record found for this ID.";
                 }
             }
+            #endregion
         }
-        #endregion
     }
 }

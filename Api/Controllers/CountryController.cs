@@ -8,9 +8,9 @@ namespace Api.Controllers
     [ApiController]
     public class CountryController : ControllerBase
     {
-        private readonly CountryRepository _countryRepository;
+        private readonly ICountryRepository _countryRepository;
 
-        public CountryController(CountryRepository countryRepository)
+        public CountryController(ICountryRepository countryRepository)
         {
             _countryRepository = countryRepository;
         }
@@ -62,8 +62,8 @@ namespace Api.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteCountry(int id)
         {
-            _countryRepository.DeleteCountry(id);
-            return NoContent();
+            var result = _countryRepository.DeleteCountry(id);
+            return Ok(result);
         }
         #endregion
     }

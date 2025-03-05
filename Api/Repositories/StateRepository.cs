@@ -4,14 +4,10 @@ using Api.Models;
 
 namespace Api.Repositories
 {
-    public class StateRepository
+    public class StateRepository : BaseRepository, IStateRepository
     {
-        private readonly string _connectionString;
+        public StateRepository(IConfiguration configuration) : base(configuration) { }
 
-        public StateRepository(IConfiguration configuration)
-        {
-            _connectionString = configuration.GetConnectionString("myConnectionString");
-        }
 
         #region SelectAll
         // Get All States
@@ -19,7 +15,7 @@ namespace Api.Repositories
         {
             List<State> states = new List<State>();
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (var conn = GetConnection())
             {
                 conn.Open();
                 using (SqlCommand cmd = new SqlCommand("PR_MST_State_SelectAll", conn))
@@ -51,12 +47,14 @@ namespace Api.Repositories
         {
             State state = null;
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (var conn = GetConnection())
             {
                 conn.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT * FROM States WHERE state_id = @state_id", conn))
+                using (SqlCommand cmd = new SqlCommand("GetStateByID", conn))
                 {
-                    cmd.Parameters.AddWithValue("@state_id", id);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@StateID", id);
+
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.Read())
@@ -65,7 +63,7 @@ namespace Api.Repositories
                             {
                                 state_id = Convert.ToInt32(reader["state_id"]),
                                 state_name = reader["state_name"].ToString(),
-                                country_name = reader["country_name"].ToString (),
+                                country_name = reader["country_name"].ToString()
                             };
                         }
                     }
@@ -74,13 +72,14 @@ namespace Api.Repositories
 
             return state;
         }
+
         #endregion
 
         #region Insert
         // Insert State
         public void AddState(State_2 state)
         {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (var conn = GetConnection())
             {
                 conn.Open();
                 using (SqlCommand cmd = new SqlCommand("State_Insert", conn))
@@ -99,7 +98,7 @@ namespace Api.Repositories
         // Update State
         public void UpdateState(State_2 state)
         {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (var conn = GetConnection())
             {
                 conn.Open();
                 using (SqlCommand cmd = new SqlCommand("State_Update", conn))
@@ -116,16 +115,20 @@ namespace Api.Repositories
 
         #region Delete
         // Delete State
-        public void DeleteState(int id) 
+        public string DeleteState(int id) 
         {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (var conn = GetConnection())
             {
                 conn.Open();
                 using (SqlCommand cmd = new SqlCommand("State_Delete", conn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@state_id", id);
-                    cmd.ExecuteNonQuery();
+                    
+                    var rowsAffected = cmd.ExecuteNonQuery();
+                    return rowsAffected > 0
+                        ? "Deleted Successfully"
+                        : "Delete Failed: No record found for this ID.";
                 }
             }
         }

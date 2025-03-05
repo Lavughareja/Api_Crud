@@ -8,9 +8,9 @@ namespace Api.Controllers
     [ApiController]
     public class GenderController : ControllerBase
     {
-        private readonly GenderRepository _genderRepository;
+        private readonly IGenderRepository _genderRepository;
 
-        public GenderController(GenderRepository genderRepository)
+        public GenderController(IGenderRepository genderRepository)
         {
             _genderRepository = genderRepository;
         }
@@ -62,8 +62,8 @@ namespace Api.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteGender(int id)
         {
-            _genderRepository.DeleteGender(id);
-            return NoContent();
+            var result = _genderRepository.DeleteGender(id);
+            return Ok(result);
         }
         #endregion
     }

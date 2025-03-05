@@ -4,21 +4,17 @@ using Api.Models;
 
 namespace Api.Repositories
 {
-    public class GenderRepository
+    public class GenderRepository : BaseRepository, IGenderRepository
     {
-        private readonly string _connectionString;
+        public GenderRepository(IConfiguration configuration) : base(configuration) { }
 
-        public GenderRepository(IConfiguration configuration)
-        {
-            _connectionString = configuration.GetConnectionString("myConnectionString");
-        }
         #region SelectAll
         // Get All Genders
         public List<Gender> GetGenders()
         {
             List<Gender> genders = new List<Gender>();
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (var conn = GetConnection())
             {
                 conn.Open();
                 using (SqlCommand cmd = new SqlCommand("PR_MST_Gender_SelectAll", conn))
@@ -48,12 +44,14 @@ namespace Api.Repositories
         {
             Gender gender = null;
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (var conn = GetConnection())
             {
                 conn.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT gender_id, gender_name FROM Gender WHERE gender_id = @gender_id", conn))
+                using (SqlCommand cmd = new SqlCommand("GetGenderByID", conn))
                 {
-                    cmd.Parameters.AddWithValue("@gender_id", id);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@GenderID", id);
+
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.Read())
@@ -70,13 +68,14 @@ namespace Api.Repositories
 
             return gender;
         }
+
         #endregion
 
         #region Insert
         // Insert Gender
         public void AddGender(Gender gender)
         {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (var conn = GetConnection())
             {
                 conn.Open();
                 using (SqlCommand cmd = new SqlCommand("Gender_Insert", conn))
@@ -93,7 +92,7 @@ namespace Api.Repositories
         // Update Gender
         public void UpdateGender(Gender gender)
         {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (var conn = GetConnection())
             {
                 conn.Open();
                 using (SqlCommand cmd = new SqlCommand("Gender_update", conn))
@@ -109,16 +108,22 @@ namespace Api.Repositories
 
         #region Delete
         // Delete Gender
-        public void DeleteGender(int id)
+        public string DeleteGender(int id)
         {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (var conn = GetConnection())
             {
-                conn.Open();
+                
                 using (SqlCommand cmd = new SqlCommand("Gender_delete", conn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@gender_id", id);
-                    cmd.ExecuteNonQuery();
+
+                    conn.Open();
+                    int rowsAffected = cmd.ExecuteNonQuery();
+
+                    return rowsAffected > 0
+                        ? "Deleted Successfully"
+                        : "Delete Failed: No record found for this ID.";
                 }
             }
         }

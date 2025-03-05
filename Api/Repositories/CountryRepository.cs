@@ -3,14 +3,9 @@ using Microsoft.Data.SqlClient;
 using Api.Models;
 namespace Api.Repositories
 {
-    public class CountryRepository
+    public class CountryRepository: BaseRepository, ICountryRepository
     {
-        private readonly string _connectionString;
-
-        public CountryRepository(IConfiguration configuration)
-        {
-            _connectionString = configuration.GetConnectionString("myConnectionString");
-        }
+        public CountryRepository(IConfiguration configuration) : base(configuration) { }
 
         #region SelectAll
         // Get All Countries
@@ -18,7 +13,7 @@ namespace Api.Repositories
         {
             List<Country> countries = new List<Country>();
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (var conn = GetConnection())
             {
                 conn.Open();
                 using (SqlCommand cmd = new SqlCommand("PR_MST_Country_SelectAll", conn))
@@ -48,12 +43,14 @@ namespace Api.Repositories
         {
             Country country = null;
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (var conn = GetConnection())
             {
                 conn.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT * FROM Country WHERE Country_id = @Country_id", conn))
+                using (SqlCommand cmd = new SqlCommand("GetCountryByID", conn))
                 {
-                    cmd.Parameters.AddWithValue("@Country_id", id);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@CountryID", id);
+
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.Read())
@@ -70,13 +67,14 @@ namespace Api.Repositories
 
             return country;
         }
+
         #endregion
 
         #region Insert
         // Insert Country
         public void AddCountry(Country country)
         {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (var conn = GetConnection())
             {
                 conn.Open();
                 using (SqlCommand cmd = new SqlCommand("Country_Insert", conn))
@@ -93,7 +91,7 @@ namespace Api.Repositories
         // Update Country
         public void UpdateCountry(Country country)
         {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (var conn = GetConnection())
             {
                 conn.Open();
                 using (SqlCommand cmd = new SqlCommand("Country_Update", conn))
@@ -109,16 +107,20 @@ namespace Api.Repositories
 
         #region Delete
         // Delete Country
-        public void DeleteCountry(int id)
+        public string DeleteCountry(int id)
         {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (var conn = GetConnection())
             {
                 conn.Open();
                 using (SqlCommand cmd = new SqlCommand("Country_Delete", conn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@Country_id", id);
-                    cmd.ExecuteNonQuery();
+                   
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                    return rowsAffected > 0
+                        ? "Deleted Successfully"
+                        : "Delete Failed: No record found for this ID.";
                 }
             }
         }

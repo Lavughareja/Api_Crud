@@ -7,9 +7,9 @@ namespace Api.Controllers
     [ApiController]
     public class PersonController : ControllerBase
     {
-        private readonly PersonRepository _personRepository;
+        private readonly IPersonRepository _personRepository;
 
-        public PersonController(PersonRepository personRepository)
+        public PersonController(IPersonRepository personRepository)
         {
             _personRepository = personRepository;
         }
@@ -48,8 +48,8 @@ namespace Api.Controllers
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
-            _personRepository.DeletePerson(id);
-            return Ok(new { message = "Person deleted successfully" });
+            var result=_personRepository.DeletePerson(id);
+            return Ok(result);
         }
         #endregion
 
