@@ -1,8 +1,7 @@
 ﻿using System.Data;
 using Api.Models;
 using Microsoft.Data.SqlClient;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Http.HttpResults;
+
 
 namespace Api.Repositories
 {
