@@ -12,6 +12,7 @@ namespace Api.Repositories
             _connectionString = configuration.GetConnectionString("myConnectionString");
         }
 
+        #region SelectAll
         // Get All Countries
         public List<Country> GetCountries()
         {
@@ -39,7 +40,9 @@ namespace Api.Repositories
 
             return countries;
         }
+        #endregion
 
+        #region SelectById
         // Get Country by ID
         public Country GetCountryById(int id)
         {
@@ -67,7 +70,9 @@ namespace Api.Repositories
 
             return country;
         }
+        #endregion
 
+        #region Insert
         // Insert Country
         public void AddCountry(Country country)
         {
@@ -82,7 +87,9 @@ namespace Api.Repositories
                 }
             }
         }
+        #endregion
 
+        #region Update
         // Update Country
         public void UpdateCountry(Country country)
         {
@@ -98,7 +105,9 @@ namespace Api.Repositories
                 }
             }
         }
+        #endregion
 
+        #region Delete
         // Delete Country
         public void DeleteCountry(int id)
         {
@@ -113,5 +122,6 @@ namespace Api.Repositories
                 }
             }
         }
+        #endregion
     }
 }

@@ -12,7 +12,7 @@ namespace Api.Repositories
         {
             _connectionString = configuration.GetConnectionString("myConnectionString");
         }
-
+        #region SelectAll
         // Get All Genders
         public List<Gender> GetGenders()
         {
@@ -40,7 +40,9 @@ namespace Api.Repositories
 
             return genders;
         }
+        #endregion
 
+        #region  SelectByID
         // Get Gender by ID
         public Gender GetGenderById(int id)
         {
@@ -68,7 +70,9 @@ namespace Api.Repositories
 
             return gender;
         }
+        #endregion
 
+        #region Insert
         // Insert Gender
         public void AddGender(Gender gender)
         {
@@ -83,7 +87,9 @@ namespace Api.Repositories
                 }
             }
         }
+        #endregion
 
+        #region Update
         // Update Gender
         public void UpdateGender(Gender gender)
         {
@@ -99,7 +105,9 @@ namespace Api.Repositories
                 }
             }
         }
+        #endregion
 
+        #region Delete
         // Delete Gender
         public void DeleteGender(int id)
         {
@@ -114,5 +122,6 @@ namespace Api.Repositories
                 }
             }
         }
+        #endregion
     }
 }

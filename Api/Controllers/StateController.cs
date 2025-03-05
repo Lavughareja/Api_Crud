@@ -14,14 +14,16 @@ namespace Api.Controllers
         {
             _stateRepository = stateRepository;
         }
-
+        #region SelectAll
         // GET: api/state
         [HttpGet]
         public ActionResult<IEnumerable<State>> GetStates()
         {
             return _stateRepository.GetStates();
         }
+        #endregion
 
+        #region Insert
         // POST: api/state
         [HttpPost]
         public IActionResult AddState(State_2 state)
@@ -29,7 +31,9 @@ namespace Api.Controllers
             _stateRepository.AddState(state);
             return CreatedAtAction(nameof(GetStates), state);
         }
+        #endregion
 
+        #region Update
         // PUT: api/state/{id}
         [HttpPut("{id}")]
         public IActionResult UpdateState(int id, State_2 state)
@@ -39,7 +43,9 @@ namespace Api.Controllers
             _stateRepository.UpdateState(state);
             return NoContent();
         }
+        #endregion
 
+        #region Delete
         // DELETE: api/state/{id}
         [HttpDelete("{id}")]
         public IActionResult DeleteState(int id)
@@ -47,5 +53,6 @@ namespace Api.Controllers
             _stateRepository.DeleteState(id);
             return NoContent();
         }
+        #endregion
     }
 }

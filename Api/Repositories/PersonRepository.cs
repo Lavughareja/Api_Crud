@@ -13,7 +13,7 @@ namespace Api.Repositories
         {
             _connectionString = configuration.GetConnectionString("myConnectionString");
         }
-
+        #region SelectAll
         // Get All Persons with Pagination
         public List<Person> GetAllPersons(int pageNumber, int pageSize)
         {
@@ -52,8 +52,9 @@ namespace Api.Repositories
             return persons;
         }
 
-       
+        #endregion
 
+        #region Insert
         // Insert Person
         public void InsertPerson(Person_2 person)
         {
@@ -78,6 +79,9 @@ namespace Api.Repositories
             }
         }
 
+        #endregion
+
+        #region Update
         // Update Person
         public void UpdatePerson(Person_2 person)
         {
@@ -103,7 +107,9 @@ namespace Api.Repositories
                 cmd.ExecuteNonQuery();
             }
         }
+        #endregion
 
+        #region Delete
         // Delete Person
         public void DeletePerson(int personId)
         {
@@ -118,7 +124,9 @@ namespace Api.Repositories
             }
         }
 
+        #endregion
 
+        #region SerchTerms
         //serch
         public List<Person> SearchPersons(string searchTerm, int pageNumber, int pageSize)
         {
@@ -155,6 +163,6 @@ namespace Api.Repositories
             }
             return persons;
         }
-
+        #endregion
     }
 }

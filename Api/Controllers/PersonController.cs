@@ -13,7 +13,7 @@ namespace Api.Controllers
         {
             _personRepository = personRepository;
         }
-
+        #region SelectAll
         // GET: api/Person
         [HttpGet]
         public IActionResult GetAllPersons([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
@@ -21,6 +21,9 @@ namespace Api.Controllers
             List<Person> persons = _personRepository.GetAllPersons(pageNumber, pageSize);
             return Ok(persons);
         }
+        #endregion
+
+        #region Insert
         // POST: api/Person
         [HttpPost]
         public ActionResult Post([FromBody] Person_2 person)
@@ -28,7 +31,9 @@ namespace Api.Controllers
             _personRepository.InsertPerson(person);
             return Ok(new { message = "Person added successfullyy" });
         }
+        #endregion
 
+        #region update
         // PUT: api/Person
         [HttpPut]
         public ActionResult Put([FromBody] Person_2 person)
@@ -36,7 +41,9 @@ namespace Api.Controllers
             _personRepository.UpdatePerson(person);
             return Ok(new { message = "Person updated successfully" });
         }
+        #endregion
 
+        #region delete
         // DELETE: api/Person/{id}
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
@@ -44,12 +51,16 @@ namespace Api.Controllers
             _personRepository.DeletePerson(id);
             return Ok(new { message = "Person deleted successfully" });
         }
+        #endregion
+
+        #region Serch
         [HttpGet("search")]
         public ActionResult<List<Person>> SearchPersons([FromQuery] string searchTerm, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
             var result = _personRepository.SearchPersons(searchTerm, pageNumber, pageSize);
             return Ok(result);
         }
+        #endregion
 
     }
 }

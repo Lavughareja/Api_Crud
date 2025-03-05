@@ -1,5 +1,6 @@
 ﻿namespace Api.Models
 {
+    //Get and delete
     public class Person
     {
         public int? PersonId { get; set; }

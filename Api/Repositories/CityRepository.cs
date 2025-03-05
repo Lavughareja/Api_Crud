@@ -12,7 +12,7 @@ namespace Api.Repositories
         {
             _connectionString = configuration.GetConnectionString("myConnectionString");
         }
-
+        #region SelectAll
         // Get All Cities
         public List<City> GetCities()
         {
@@ -42,7 +42,9 @@ namespace Api.Repositories
 
             return cities;
         }
+        #endregion
 
+        #region SelectById
         // Get City by ID
         public City GetCityById(int id)
         {
@@ -73,6 +75,9 @@ namespace Api.Repositories
             return city;
         }
 
+        #endregion
+
+        #region Insert
         // Insert City
         public void AddCity(City_2 city)
         {
@@ -90,6 +95,9 @@ namespace Api.Repositories
             }
         }
 
+        #endregion
+
+        #region Update
         // Update City
         public void UpdateCity(City_2 city)
         {
@@ -106,8 +114,10 @@ namespace Api.Repositories
                     cmd.ExecuteNonQuery();
                 }
             }
-        }   
+        }
+        #endregion
 
+        #region Delete
         // Delete City
         public void DeleteCity(int id)
         {
@@ -122,5 +132,6 @@ namespace Api.Repositories
                 }
             }
         }
+        #endregion
     }
 }

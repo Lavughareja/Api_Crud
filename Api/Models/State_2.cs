@@ -1,5 +1,6 @@
 ﻿namespace Api.Models
 {
+    //Insert and update
     public class State_2
     {
         public int? state_id { get; set; }

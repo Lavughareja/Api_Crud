@@ -14,14 +14,16 @@ namespace Api.Controllers
         {
             _countryRepository = countryRepository;
         }
-
+        #region SelectAll
         // GET: api/country
         [HttpGet]
         public ActionResult<IEnumerable<Country>> GetCountries()
         {
             return _countryRepository.GetCountries();
         }
+        #endregion
 
+        #region SelectByID
         // GET: api/country/{id}
         [HttpGet("{id}")]
         public ActionResult<Country> GetCountry(int id)
@@ -31,7 +33,9 @@ namespace Api.Controllers
                 return NotFound();
             return country;
         }
+        #endregion
 
+        #region Insert
         // POST: api/country
         [HttpPost]
         public IActionResult AddCountry(Country country)
@@ -39,7 +43,9 @@ namespace Api.Controllers
             _countryRepository.AddCountry(country);
             return CreatedAtAction(nameof(GetCountry), new { id = country.Country_id }, country);
         }
+        #endregion
 
+        #region Update
         // PUT: api/country/{id}
         [HttpPut("{id}")]
         public IActionResult UpdateCountry(int id, Country country)
@@ -49,7 +55,9 @@ namespace Api.Controllers
             _countryRepository.UpdateCountry(country);
             return NoContent();
         }
+        #endregion
 
+        #region Delete
         // DELETE: api/country/{id}
         [HttpDelete("{id}")]
         public IActionResult DeleteCountry(int id)
@@ -57,5 +65,6 @@ namespace Api.Controllers
             _countryRepository.DeleteCountry(id);
             return NoContent();
         }
+        #endregion
     }
 }

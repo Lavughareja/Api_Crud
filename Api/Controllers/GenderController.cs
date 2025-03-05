@@ -14,14 +14,16 @@ namespace Api.Controllers
         {
             _genderRepository = genderRepository;
         }
-
+        #region SelectAll
         // GET: api/gender
         [HttpGet]
         public ActionResult<IEnumerable<Gender>> GetGenders()
         {
             return _genderRepository.GetGenders();
         }
+        #endregion
 
+        #region SelectById 
         // GET: api/gender/{id}
         [HttpGet("{id}")]
         public ActionResult<Gender> GetGender(int id)
@@ -31,7 +33,9 @@ namespace Api.Controllers
                 return NotFound();
             return gender;
         }
+        #endregion
 
+        #region Insert
         // POST: api/gender
         [HttpPost]
         public IActionResult AddGender(Gender gender)
@@ -39,7 +43,9 @@ namespace Api.Controllers
             _genderRepository.AddGender(gender);
             return CreatedAtAction(nameof(GetGender), new { id = gender.gender_id }, gender);
         }
+        #endregion
 
+        #region Update
         // PUT: api/gender/{id}
         [HttpPut("{id}")]
         public IActionResult UpdateGender(int id, Gender gender)
@@ -49,7 +55,9 @@ namespace Api.Controllers
             _genderRepository.UpdateGender(gender);
             return NoContent();
         }
+        #endregion
 
+        #region Delete
         // DELETE: api/gender/{id}
         [HttpDelete("{id}")]
         public IActionResult DeleteGender(int id)
@@ -57,5 +65,6 @@ namespace Api.Controllers
             _genderRepository.DeleteGender(id);
             return NoContent();
         }
+        #endregion
     }
 }

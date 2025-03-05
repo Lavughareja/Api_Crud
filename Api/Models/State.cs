@@ -1,5 +1,6 @@
 ﻿namespace Api.Models
 {
+    //Get and delete
     public class State
     {
         public int? state_id { get; set; }

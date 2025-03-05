@@ -13,6 +13,7 @@ namespace Api.Repositories
             _connectionString = configuration.GetConnectionString("myConnectionString");
         }
 
+        #region SelectAll
         // Get All States
         public List<State> GetStates()
         {
@@ -42,7 +43,9 @@ namespace Api.Repositories
 
             return states;
         }
+        #endregion
 
+        #region SelectByID
         // Get State by ID
         public State GetStateById(int id)
         {
@@ -71,7 +74,9 @@ namespace Api.Repositories
 
             return state;
         }
+        #endregion
 
+        #region Insert
         // Insert State
         public void AddState(State_2 state)
         {
@@ -88,6 +93,9 @@ namespace Api.Repositories
             }
         }
 
+        #endregion
+
+        #region Update
         // Update State
         public void UpdateState(State_2 state)
         {
@@ -104,7 +112,9 @@ namespace Api.Repositories
                 }
             }
         }
+        #endregion
 
+        #region Delete
         // Delete State
         public void DeleteState(int id) 
         {
@@ -119,5 +129,6 @@ namespace Api.Repositories
                 }
             }
         }
+        #endregion
     }
 }

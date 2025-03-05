@@ -1,11 +1,13 @@
 ﻿namespace Api.Models
 {
+    //For insert and update
     public class City_2
     {
-        //hello world 
+        
         public int? city_id { get; set; }
         public string? city_name { get; set; }
         public int? state_id { get; set; }
         public int? country_id { get; set; }
     }
+    
 }

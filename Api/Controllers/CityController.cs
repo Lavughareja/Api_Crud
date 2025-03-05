@@ -14,14 +14,16 @@ namespace Api.Controllers
         {
             _cityRepository = cityRepository;
         }
-
+        #region SelectAll
         // GET: api/city
         [HttpGet]
         public ActionResult<IEnumerable<City>> GetCities()
         {
             return _cityRepository.GetCities();
         }
+        #endregion
 
+        #region SelectByID
         // GET: api/city/{id}
         [HttpGet("{id}")]
         public ActionResult<City> GetCity(int id)
@@ -31,7 +33,9 @@ namespace Api.Controllers
                 return NotFound();
             return city;
         }
+        #endregion
 
+        #region Insert
         // POST: api/city
         [HttpPost]
         public IActionResult AddCity(City_2 city)
@@ -39,7 +43,9 @@ namespace Api.Controllers
             _cityRepository.AddCity(city);
             return CreatedAtAction(nameof(GetCity), new { id = city.city_id }, city);
         }
+        #endregion
 
+        #region Update
         // PUT: api/city/{id}
         [HttpPut("{id}")]
         public IActionResult UpdateCity(int id, City_2 city)
@@ -49,7 +55,9 @@ namespace Api.Controllers
             _cityRepository.UpdateCity(city);
             return NoContent();
         }
+        #endregion
 
+        #region delete
         // DELETE: api/city/{id}
         [HttpDelete("{id}")]
         public IActionResult DeleteCity(int id)
@@ -57,5 +65,6 @@ namespace Api.Controllers
             _cityRepository.DeleteCity(id);
             return NoContent();
         }
+        #endregion
     }
 }
