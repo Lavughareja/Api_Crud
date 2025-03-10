@@ -3,7 +3,6 @@
     //For insert and update
     public class City_2
     {
-        
         public int? city_id { get; set; }
         public string? city_name { get; set; }
         public int? state_id { get; set; }
