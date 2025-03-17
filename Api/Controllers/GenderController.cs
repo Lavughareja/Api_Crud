@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Api.Models;
 using Api.Repositories;
+
 
 namespace Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles ="admin")] // Requires authentication for all endpoints
     public class GenderController : ControllerBase
     {
         private readonly IGenderRepository _genderRepository;
@@ -14,8 +17,8 @@ namespace Api.Controllers
         {
             _genderRepository = genderRepository;
         }
+
         #region SelectAll
-        // GET: api/gender
         [HttpGet]
         public ActionResult<IEnumerable<Gender>> GetGenders()
         {
@@ -23,8 +26,7 @@ namespace Api.Controllers
         }
         #endregion
 
-        #region SelectById 
-        // GET: api/gender/{id}
+        #region SelectById
         [HttpGet("{id}")]
         public ActionResult<Gender> GetGender(int id)
         {
@@ -36,7 +38,6 @@ namespace Api.Controllers
         #endregion
 
         #region Insert
-        // POST: api/gender
         [HttpPost]
         public IActionResult AddGender(Gender gender)
         {
@@ -46,7 +47,6 @@ namespace Api.Controllers
         #endregion
 
         #region Update
-        // PUT: api/gender/{id}
         [HttpPut("{id}")]
         public IActionResult UpdateGender(int id, Gender gender)
         {
@@ -58,7 +58,6 @@ namespace Api.Controllers
         #endregion
 
         #region Delete
-        // DELETE: api/gender/{id}
         [HttpDelete("{id}")]
         public IActionResult DeleteGender(int id)
         {

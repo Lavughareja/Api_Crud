@@ -9,7 +9,6 @@ namespace Api.Repositories
         public GenderRepository(IConfiguration configuration) : base(configuration) { }
 
         #region SelectAll
-        // Get All Genders
         public List<Gender> GetGenders()
         {
             List<Gender> genders = new List<Gender>();
@@ -38,8 +37,7 @@ namespace Api.Repositories
         }
         #endregion
 
-        #region  SelectByID
-        // Get Gender by ID
+        #region SelectByID
         public Gender GetGenderById(int id)
         {
             Gender gender = null;
@@ -68,11 +66,9 @@ namespace Api.Repositories
 
             return gender;
         }
-
         #endregion
 
         #region Insert
-        // Insert Gender
         public void AddGender(Gender gender)
         {
             using (var conn = GetConnection())
@@ -89,7 +85,6 @@ namespace Api.Repositories
         #endregion
 
         #region Update
-        // Update Gender
         public void UpdateGender(Gender gender)
         {
             using (var conn = GetConnection())
@@ -107,12 +102,10 @@ namespace Api.Repositories
         #endregion
 
         #region Delete
-        // Delete Gender
         public string DeleteGender(int id)
         {
             using (var conn = GetConnection())
             {
-                
                 using (SqlCommand cmd = new SqlCommand("Gender_delete", conn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
